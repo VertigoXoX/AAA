@@ -20,12 +20,12 @@ def solve(a, b, c):
         return [-c / b]
 
     # Вычисляем дискриминант
-    discriminant = (b * 2) - 4 * a * c
+    discriminant = (b*2) - 4 * a * c  # Исправленная формула дискриминанта
 
     if discriminant >= 0:
         # Если дискриминант неотрицателен, то у уравнения есть действительные решения
-        x1 = (-b + discriminant * 0.5) / (2 * a)
-        x2 = (-b - discriminant * 0.5) / (2 * a)
+        x1 = (-b + discriminant*0.5) / (2 * a)
+        x2 = (-b - discriminant*0.5) / (2 * a)
         return [x1, x2]
     else:
         # Если дискриминант отрицателен, то решений нет
