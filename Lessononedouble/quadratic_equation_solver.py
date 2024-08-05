@@ -1,6 +1,6 @@
 import cmath
 
-def solve(a, b, c):
+def solve(a, b, c, eps=1e-6):
     """
     Решает квадратное уравнение вида ax^2 + bx + c = 0.
 
@@ -8,6 +8,7 @@ def solve(a, b, c):
         a: Коэффициент a.
         b: Коэффициент b.
         c: Коэффициент c.
+        eps: Порог для сравнения дискриминанта с нулем (по умолчанию 1e-6).
 
     Returns:
         Список корней уравнения. Если уравнение не имеет действительных корней,
@@ -15,25 +16,36 @@ def solve(a, b, c):
     """
     # Проверяем, является ли уравнение квадратным
     if a == 0:
-        # Если a равно 0, то это не квадратное уравнение, 
-        # поэтому поднимаем исключение
         raise ValueError("Коэффициент a не может быть равен 0.")
 
-    # Вычисляем дискриминант
-    discriminant = (b*2) - 4 * a * c  # Исправленная формула дискриминанта
+    # Проверяем, являются ли коэффициенты числами
+    if not all(isinstance(x, (int, float)) for x in [a, b, c]):
+        raise TypeError("Коэффициенты должны быть числами.")
 
-    if discriminant >= 0:
-        # Если дискриминант неотрицателен, то у уравнения есть действительные решения
-        x1 = (-b + discriminant*0.5) / (2 * a)
-        x2 = (-b - discriminant*0.5) / (2 * a)
+    # Проверяем, не являются ли коэффициенты NaN, Infinity, -Infinity
+    if any(not x or not isinstance(x, (int, float)) for x in [a, b, c]):
+        raise ValueError("Коэффициенты не могут быть NaN, Infinity или -Infinity.")
+
+    # Вычисляем дискриминант
+    discriminant = b*2 - 4 * a * c
+
+    # Сравниваем дискриминант с epsilon
+    if abs(discriminant) < eps:
+        # Если дискриминант очень близок к нулю, то у уравнения есть два одинаковых корня
+        x = (-b + cmath.sqrt(discriminant)) / (2 * a)
+        return [x, x]
+    elif discriminant < -eps:
+        # Если дискриминант отрицателен, то у уравнения есть комплексные решения
+        x1 = (-b + cmath.sqrt(discriminant)) / (2 * a)
+        x2 = (-b - cmath.sqrt(discriminant)) / (2 * a)
         return [x1, x2]
     else:
-        # Если дискриминант отрицателен, то решений нет
+        # Если дискриминант неотрицателен, то у уравнения есть действительные решения
         x1 = (-b + cmath.sqrt(discriminant)) / (2 * a)
         x2 = (-b - cmath.sqrt(discriminant)) / (2 * a)
         return [x1, x2]
 
-if __name__ == "main":
+if __name__ == "__main__":
     # Примеры использования
     roots1 = solve(1, -5, 6)
     print("Корни уравнения x^2 - 5x + 6 = 0:")
