@@ -1,5 +1,5 @@
 import unittest
-from quadratic_equation_solver import solve
+from .quadratic_equation_solver import solve
 
 class TestSolve(unittest.TestCase):
 
